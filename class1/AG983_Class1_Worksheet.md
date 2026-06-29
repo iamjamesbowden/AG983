@@ -5,7 +5,7 @@
 
 ---
 
-This worksheet accompanies the Class 1 Colab notebook. Complete each question as you work through the notebook, recording your observations, choices, and justifications. Submit this as a Word document.
+This worksheet accompanies the Class 1 Colab notebook. Complete each question as you work through the notebook, recording your observations, choices, and justifications. Submit as a Word document.
 
 ---
 
@@ -14,11 +14,11 @@ This worksheet accompanies the Class 1 Colab notebook. Complete each question as
 The corpus used in this workshop is drawn from the Enron email dataset (Klimt & Yang, 2004), released into the public domain by the Federal Energy Regulatory Commission (FERC) during the 2001 investigation into Enron Corporation.
 
 The corpus spans three periods:
-- **Pre-crisis (2000):** Enron at peak performance, named Fortune's Most Innovative Company for the fifth consecutive year
-- **Crisis (2001):** Accounting irregularities emerge; share price collapses from $90 to under $1
-- **Collapse (late 2001–2002):** Bankruptcy filing; regulatory investigations; employee savings wiped out
+- **Pre-crisis (2000):** Enron at peak — named Fortune's Most Innovative Company for the fifth consecutive year; record revenues
+- **Crisis (2001):** Accounting irregularities emerge; Sherron Watkins writes her whistleblower memo; share price collapses from $90 to under $1
+- **Collapse (late 2001–2002):** Chapter 11 bankruptcy filing; regulatory investigations; employee retirement savings wiped out
 
-As discussed in the lecture, this corpus is particularly well-suited to preprocessing exercises because it combines the *hedged, forward-looking register of corporate financial communication* with the *informal directness of internal correspondence*.
+This corpus is particularly useful for preprocessing exercises because it combines the *hedged, forward-looking register of corporate financial communication* with the *informal directness of internal correspondence* — precisely the combination that exposes the limitations of generic NLP pipelines.
 
 ---
 
@@ -32,13 +32,13 @@ a) How many emails are in the corpus, and how are they distributed across the th
 
 &nbsp;
 
-b) What is the mean email length in words? What is the shortest and longest email? What does this variation in length suggest about the register diversity of the corpus?
+b) What is the mean email length in words? What is the range (shortest to longest)? What does this variation in length tell you about the register diversity of the corpus?
 
 &nbsp;
 
 &nbsp;
 
-c) Look at the raw text of one email printed by the notebook. Identify at least **three preprocessing challenges** visible in the raw text (e.g. punctuation attached to words, mixed case, numbers embedded in text).
+c) Look at the raw email printed in the notebook. Identify at least **three preprocessing challenges** visible in the raw text (e.g. punctuation attached to words, mixed case, numbers embedded in text).
 
 | # | Preprocessing challenge | Example from the text |
 |---|---|---|
@@ -50,19 +50,19 @@ c) Look at the raw text of one email printed by the notebook. Identify at least 
 
 ## Section B: Tokenisation (Step 2)
 
-**Question 2.** The notebook compares whitespace tokenisation against NLTK's `word_tokenize`.
+**Question 2.**
 
-a) How many more or fewer tokens does NLTK produce compared to whitespace splitting for the sample email?
-
-&nbsp;
-
-b) The Loughran-McDonald dictionary contains the word `liability`. If a document contains the string `"liabilities."` (with punctuation attached), will a whitespace tokeniser match it against the dictionary? Explain why or why not.
+a) How many tokens does NLTK's `word_tokenize` produce compared to whitespace splitting for the sample email? Which is larger and why?
 
 &nbsp;
 
+b) The Loughran-McDonald dictionary contains the entry `losses`. If a document contains the string `"losses."` (with a full stop attached), will a whitespace tokeniser match it against the dictionary? Explain why or why not.
+
 &nbsp;
 
-c) Why does this matter for the reliability of a sentiment score computed from a corporate disclosure?
+&nbsp;
+
+c) Why does this matter for the reliability of a sentiment score computed from corporate disclosure text?
 
 &nbsp;
 
@@ -74,17 +74,17 @@ c) Why does this matter for the reliability of a sentiment score computed from a
 
 **Question 3.**
 
-a) Examine the four frequency distributions shown in the notebook. What is the most obvious change between "no processing" and "case-fold + punctuation removed"?
+a) Compare the four frequency distribution charts. What is the most obvious change between "NLTK tokenise only" and "Case-fold + punct removed"?
 
 &nbsp;
 
-b) The lecture noted that retaining `!` and `?` improves financial sentiment classification accuracy by 0.3% (Renault, 2020). For a corpus of corporate email like Enron, would you retain or remove these characters? Justify your answer.
+b) The notebook quotes Renault (2020): retaining `!` and `?` improves financial sentiment classification by 0.3%. For a corpus of corporate email like Enron, would you retain or remove these characters? Justify your answer with reference to the type of text you are analysing.
 
 &nbsp;
 
 &nbsp;
 
-c) The Enron corpus includes emails like `"EBITDA margins improved"`. What happens to the token `EBITDA` after case folding? Is this a problem for financial text analysis?
+c) The Enron corpus contains emails with phrases like `"EBITDA margins improved"`. What happens to the token `EBITDA` after case folding? Is this a potential problem for dictionary-based sentiment analysis?
 
 &nbsp;
 
@@ -96,22 +96,29 @@ c) The Enron corpus includes emails like `"EBITDA margins improved"`. What happe
 
 **Question 4.** This is one of the most consequential decisions in preprocessing financial text.
 
-a) In your own words, explain why the standard NLTK stop-word list is inappropriate for sentiment analysis of corporate disclosures.
+a) The Step 0 output shows which finance-significant terms are present in NLTK's standard stop-word list. List three of them here:
+
+| Term | Analytical role in financial text |
+|---|---|
+| | |
+| | |
+| | |
+
+b) In your own words, explain why removing these terms from a corporate email corpus would damage a sentiment analysis.
 
 &nbsp;
 
 &nbsp;
 
-b) The notebook shows that the standard NLTK list removes `will`, `may`, `not`, and `down`. For each of these, give an example sentence from financial text where removing it would distort the sentiment or meaning:
+c) For each of the following terms, give an example sentence from financial text where removing it would distort meaning or sentiment:
 
-| Term | Example sentence | Effect of removal |
+| Term | Example sentence | Effect of removing it |
 |---|---|---|
-| `will` | | |
-| `may` | | |
 | `not` | | |
+| `will` | | |
 | `down` | | |
 
-c) Which stop-word setting did you choose for your pipeline? Justify your choice with reference to the lecture material and the specific properties of the Enron corpus.
+d) Which stop-word setting did you choose? Justify your choice with reference to the lecture material and the specific nature of the Enron corpus.
 
 **My choice:** ☐ None &nbsp; ☐ Standard NLTK &nbsp; ☐ Finance-adjusted
 
@@ -127,17 +134,17 @@ c) Which stop-word setting did you choose for your pipeline? Justify your choice
 
 **Question 5.**
 
-a) The notebook shows that Porter stemming produces `liabil` from `liability`. The Loughran-McDonald dictionary contains `liability`. What is the consequence for your sentiment score?
+a) The notebook comparison table shows that Porter stemming produces `declin` from `declining`. The Loughran-McDonald dictionary contains `decline` but not `declin`. What is the consequence for your sentiment score?
 
 &nbsp;
 
-b) Find one example in the comparison table (Step 6) where lemmatisation preserves a meaningful LM dictionary match that stemming would destroy. Record it here:
+b) Find one example in the Step 6 table where lemmatisation preserves an LM dictionary match that stemming would destroy. Record it here:
 
-| Token | Stem | Lemma | LM match: raw | LM match: stem | LM match: lemma |
+| Token | Porter stem | Lemma | LM match: raw | LM match: stem | LM match: lemma |
 |---|---|---|---|---|---|
 | | | | | | |
 
-c) The lecture noted that stemming may be defensible "when lemmatisation is computationally infeasible." Given that the Enron corpus has 1,000 emails, is computational cost a meaningful constraint here? What would your answer be for a corpus of 500,000 10-K filings?
+c) The lecture notes that stemming may be defensible "when lemmatisation is computationally infeasible." Given that the Enron corpus has 1,000 emails, is computational cost a meaningful constraint? What would your answer be for a corpus of one million SEC filings?
 
 &nbsp;
 
@@ -157,9 +164,9 @@ d) Which normalisation method did you choose? Justify your choice.
 
 ## Section F: The Pipeline Diagnostic (Step 7)
 
-**Question 6.** This step directly illustrates the consequences of your choices.
+**Question 6.**
 
-a) How many LM positive and negative matches did your pipeline produce? How does this compare to the misconfigured pipeline?
+a) Record your pipeline's LM match counts and compare to the misconfigured pipeline:
 
 | | Your pipeline | Misconfigured pipeline |
 |---|---|---|
@@ -167,13 +174,19 @@ a) How many LM positive and negative matches did your pipeline produce? How does
 | LM Negative matches | | |
 | Total LM matches | | |
 
-b) The chart in Step 7 shows net LM sentiment across the three periods (pre-crisis, crisis, collapse). Describe the pattern you observe. Does the direction of the change make sense given what you know about Enron's history?
+b) By what percentage does your pipeline outperform the misconfigured version? What specific pipeline decisions account for this improvement?
 
 &nbsp;
 
 &nbsp;
 
-c) Renault (2020) finds that "algorithm choice explains far less variance than pipeline quality." Based on what you have seen in this exercise, do you find this claim plausible? Explain.
+c) The net sentiment chart shows LM sentiment across the three Enron periods. Describe the pattern. Does the direction of change match what you would expect given Enron's history? Explain any surprises.
+
+&nbsp;
+
+&nbsp;
+
+d) Renault (2020) concludes that "algorithm choice explains far less variance than pipeline quality." Based on what you have observed in this exercise, do you find this claim plausible? Explain in 2–3 sentences.
 
 &nbsp;
 
@@ -185,42 +198,44 @@ c) Renault (2020) finds that "algorithm choice explains far less variance than p
 
 **Question 7.** Loughran & McDonald (2011) demonstrate that between 73% and 80% of negative words identified by the Harvard General Inquirer are not negative in a financial context.
 
-a) The notebook shows tokens flagged as negative by the Harvard GI but not by LM. List three such tokens visible in the notebook output and explain why they would be incorrectly classified as negative in a financial document:
+a) The notebook shows tokens flagged negative by Harvard GI but not by LM. List three such tokens and explain why they would be incorrectly labelled negative in a financial document:
 
-| Token | Why not negative in financial context |
+| Token | Why not negative in a financial context |
 |---|---|
 | | |
 | | |
 | | |
 
-b) Examine the tokens flagged as negative by LM but not by Harvard GI. These represent finance-specific negative language. List three examples and comment on why they carry negative meaning in corporate disclosure:
+b) List three tokens flagged negative by LM but not by Harvard GI. Explain why they carry negative meaning in corporate disclosure:
 
-| Token | Why negative in financial context |
+| Token | Why negative in a financial disclosure context |
 |---|---|
 | | |
 | | |
 | | |
+
+c) Which dictionary would you use for a study of corporate sentiment in SEC filings? Justify your choice.
+
+&nbsp;
+
+&nbsp;
 
 ---
 
 ## Section H: Corpus Bias (Step 10)
 
-**Question 8.** Apply the six bias types from Section 6.5 of the lecture to the Enron corpus used in this workshop:
+**Question 8.** Apply the six bias types from Section 6.5 of the lecture to the Enron corpus:
 
-| Bias type | Does it apply to this corpus? | Explain specifically how |
+| Bias type | Applies? | Explain specifically how |
 |---|---|---|
-| **Resource bias** | ☐ Yes &nbsp; ☐ No &nbsp; ☐ Partial | |
-| **Incentive bias** | ☐ Yes &nbsp; ☐ No &nbsp; ☐ Partial | |
-| **Medium bias** | ☐ Yes &nbsp; ☐ No &nbsp; ☐ Partial | |
-| **Retrieval bias** | ☐ Yes &nbsp; ☐ No &nbsp; ☐ Partial | |
-| **Survivorship bias** | ☐ Yes &nbsp; ☐ No &nbsp; ☐ Partial | |
-| **Self-reporting bias** | ☐ Yes &nbsp; ☐ No &nbsp; ☐ Partial | |
+| **Resource** | ☐ Yes &nbsp; ☐ No &nbsp; ☐ Partial | |
+| **Incentive** | ☐ Yes &nbsp; ☐ No &nbsp; ☐ Partial | |
+| **Medium** | ☐ Yes &nbsp; ☐ No &nbsp; ☐ Partial | |
+| **Retrieval** | ☐ Yes &nbsp; ☐ No &nbsp; ☐ Partial | |
+| **Survivorship** | ☐ Yes &nbsp; ☐ No &nbsp; ☐ Partial | |
+| **Self-reporting** | ☐ Yes &nbsp; ☐ No &nbsp; ☐ Partial | |
 
-**Question 9.** The chart at the bottom of Step 10 shows net LM sentiment across the three Enron periods. Managers wrote more positively during the crisis than the financial reality warranted.
-
-Which bias type best explains this pattern, and what does it imply for researchers who use corporate disclosures as a measure of firm condition?
-
-&nbsp;
+**Question 9.** The Step 10 chart shows net LM sentiment broken down by category and period. Does the executive category show the pattern you would predict under incentive bias — specifically, that executives would use more positive language than the underlying financial condition warrants? Comment on what you observe.
 
 &nbsp;
 
@@ -230,9 +245,9 @@ Which bias type best explains this pattern, and what does it imply for researche
 
 ## Section I: Your Final Pipeline
 
-**Question 10.** Record your final pipeline settings and justify each choice.
+**Question 10.** Record your final pipeline settings and justify each choice with reference to the lecture and/or the literature.
 
-| Decision | Your choice | Academic justification |
+| Decision | Your choice | Academic justification (cite a source where possible) |
 |---|---|---|
 | Tokenisation | NLTK `word_tokenize` | |
 | Case folding | ☐ Yes &nbsp; ☐ No | |
@@ -243,7 +258,7 @@ Which bias type best explains this pattern, and what does it imply for researche
 | Min document frequency | | |
 | Max document frequency | | |
 
-**Question 11.** In no more than 150 words, write a methods paragraph that could appear in a research paper describing your pre-processing pipeline. Follow the conventions of academic writing — justify each decision with reference to relevant literature.
+**Question 11.** In no more than 150 words, write a methods paragraph suitable for a research paper describing your pre-processing pipeline. Justify each decision with reference to relevant literature, following the conventions of academic writing.
 
 &nbsp;
 

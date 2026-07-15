@@ -1,5 +1,5 @@
 /**
- * AG983 Week 10 — Workshop Submission Handler
+ * AG983 Workshop Five — Workshop Submission Handler
  * Deploy as a Google Apps Script Web App (Execute as: Me, Access: Anyone)
  *
  * Sheet tabs required:
